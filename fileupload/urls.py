@@ -19,6 +19,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views  # Import LoginView
 from django.shortcuts import redirect
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 # Custom view to handle redirect for logged-in users
 def home_redirect(request):
@@ -31,4 +34,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),  # Admin panel URL
     path('upload/', include('fileupload_app.urls')),  # App-specific URLs
     path('accounts/', include('django.contrib.auth.urls')),  # Built-in auth URLs
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

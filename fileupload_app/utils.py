@@ -3,6 +3,7 @@ import random
 from django.core.mail import send_mail
 from django.conf import settings
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 def generate_otp():
     # Generate a random 6-digit OTP
@@ -19,4 +20,4 @@ def send_otp_email(user_email, otp):
 def otp_is_valid(otp_time, otp):
     """Check if the OTP is still valid (valid for 5 minutes)"""
     expiration_time = otp_time + timedelta(minutes=5)
-    return datetime.now() <= expiration_time
+    return timezone.now() <= expiration_time

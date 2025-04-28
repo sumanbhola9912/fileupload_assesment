@@ -100,7 +100,7 @@ DATABASES = {
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Default backend (for regular username authentication)
-    #'users.backends.EmailBackend',  # Add the custom backend for email login
+    'fileupload_app.backends.EmailBackend',  # Add the custom backend for email login
 ]
 
 LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
@@ -152,6 +152,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # or your SMTP server
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your_email@gmail.com'  # Your email
-EMAIL_HOST_PASSWORD = 'your_email_password'  # Your email password
-DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
+EMAIL_HOST_USER = 'sumanbhola674@gmail.com'  # Your email
+EMAIL_HOST_PASSWORD = 'tthqchilzlepjefx'  # Your email password
+DEFAULT_FROM_EMAIL = 'sumanbhola674@gmail.com'

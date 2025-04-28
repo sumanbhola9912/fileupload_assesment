@@ -1,119 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e0eafc, #cfdef3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <style>
+    body {
+        min-height: 100vh; /* instead of height */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px 20px; /* Add padding so it can scroll nicely on smaller screens */
+        background: linear-gradient(135deg, #dbe6f6, #c5796d);
+        margin: 0;
+        box-sizing: border-box;
+    }
+    .form-container {
+      background-color: #ffffff;
+      padding: 40px 35px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 420px;
+    }
 
-        .form-container {
-            background-color: #ffffff;
-            padding: 30px 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+      font-size: 26px;
+    }
 
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
 
-        form {
-            display: flex;
-            flex-direction: column;
-        }
+    label {
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      color: #555;
+    }
 
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            padding: 10px 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 15px;
-            transition: border 0.2s ease;
-        }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        padding: 12px 15px;
+        /* margin-bottom: 20px; */
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 15px;
+        display: flex;
+        transition: all 0.3s ease;
+        width: 90%;
+        margin-top: 5px;
+    }
 
-        input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
+    input:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      outline: none;
+    }
 
-        .helptext {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 10px;
-        }
+    .helptext, ul.errorlist {
+      padding-top: 5px;
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 10px;
+      display: flex;
+    }
 
-        button {
-            background-color: #007bff;
-            color: #fff;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
+    ul {
+      list-style: disc inside;
+      padding-left: 15px;
+      margin-top: -10px;
+      /* margin-bottom: 20px; */
+      color: #777;
+    }
 
-        button:hover {
-            background-color: #0056b3;
-        }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-        }
+    button:hover {
+      background-color: #0056b3;
+    }
 
-        .login-link a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: 500;
-        }
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+    }
 
-        .login-link a:hover {
-            text-decoration: underline;
-        }
+    .login-link a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-        /* Improve Django form field spacing */
-        p {
-            margin: 0 0 15px 0;
-        }
+    .login-link a:hover {
+      text-decoration: underline;
+    }
 
-        label {
-            font-weight: 500;
-            margin-bottom: 5px;
-            display: block;
-        }
-    </style>
+    p {
+        margin: 5px;
+    }
+
+    li {
+        font-size: small;
+    }
+
+  </style>
 </head>
 <body>
 
-    <div class="form-container">
-        <h2>Create Your Account</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Register</button>
-        </form>
-        <div class="login-link">
-            <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
-        </div>
+<div class="form-container">
+  <h2>Create Your Account</h2>
+  <form method="POST">
+    {% csrf_token %}
+    {% if form.errors %}
+    <div class="error-messages">
+        {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+        {% endfor %}
     </div>
+    {% endif %}
+    {{ form.as_p }}
+    <button type="submit">Register</button>
+  </form>
+  <div class="login-link">
+    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+  </div>
+</div>
 
 </body>
 </html>

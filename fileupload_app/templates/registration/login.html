@@ -1,94 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .form-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        .form-container form {
-            display: flex;
-            flex-direction: column;
-        }
-        .form-container form label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        .form-container form input {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        .form-container form input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-        .form-container form button {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .form-container form button:hover {
-            background-color: #0056b3;
-        }
-        .signup-link {
-            text-align: center;
-            margin-top: 15px;
-        }
-        .signup-link a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .signup-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body {
+        min-height: 100vh; /* instead of height */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px 20px; /* Add padding so it can scroll nicely on smaller screens */
+        background: linear-gradient(135deg, #dbe6f6, #c5796d);
+        margin: 0;
+        box-sizing: border-box;
+    }
+    .form-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #f4f7fa;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      font-weight: bold;
+      color: #555;
+    }
+    .tab.active {
+      background-color: #fff;
+      color: #007bff;
+      border-bottom: 2px solid #007bff;
+    }
+    .form-content {
+      display: none;
+    }
+    .form-content.active {
+      display: block;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    form label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    form input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    form input:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+    form button {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    form button:hover {
+      background-color: #0056b3;
+    }
+    .signup-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .signup-link a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+    .error-messages {
+        color:red;
+        font-size: small;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="form-container">
-        <h2>Login</h2>
-        <form method="POST">
-            {% csrf_token %}
-            <label for="username">Username:</label>
-            <input type="text" name="username" required>
-            <label for="password">Password:</label>
-            <input type="password" name="password" required>
-            <button type="submit">Login</button>
-        </form>
-        <div class="signup-link">
-            <p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
-        </div>
+  <div class="form-container">
+    <h2>Login</h2>
+    
+    <div class="tabs">
+      <div class="tab active" onclick="showTab('password')">Email & Password</div>
+      <div class="tab" onclick="showTab('otp')">Email & OTP</div>
     </div>
+
+    <!-- Email + Password Form -->
+    <div id="password" class="form-content active">
+      <form method="POST" action="{% url 'login_password' %}">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="error-messages">
+            {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <label for="username">Email:</label>
+        <input type="text" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" name="password" required>
+        <button type="submit">Login</button>
+      </form>
+      <div class="signup-link">
+        <p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+      </div>
+    </div>
+
+    <!-- Email + OTP Form -->
+    <div id="otp" class="form-content">
+      <form method="POST" action="{% url 'request_otp' %}">
+        {% csrf_token %}
+        <label for="email">Email:</label>
+        <input type="email" name="email" required>
+        <button type="submit">Send OTP</button>
+      </form>
+      <div class="signup-link">
+        <p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function showTab(tabName) {
+      const tabs = document.querySelectorAll('.tab');
+      const contents = document.querySelectorAll('.form-content');
+      
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+      });
+      contents.forEach(content => {
+        content.classList.remove('active');
+      });
+
+      document.querySelector(`#${tabName}`).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
 
 </body>
 </html>
